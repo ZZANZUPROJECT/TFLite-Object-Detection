@@ -1,0 +1,30 @@
+<resources xmlns:xliff="http://schemas.android.com/tools">
+    <string name="app_name">Alarm</string>
+
+    <string name="action_add">추가</string>
+    <string name="action_save">저장</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_update">수정</string>
+
+    <string name="format_time">hh:mm</string>
+
+    <string name="sunday_week">일</string>
+    <string name="monday_week">월</string>
+    <string name="tuesday_week">화</string>
+    <string name="wednesday_week">수</string>
+    <string name="thursday_week">목</string>
+    <string name="friday_week">금</string>
+    <string name="saturday_week">토</string>
+
+    <string name="repeat_label">매주 반복</string>
+    <string name="vibrate_label">진동 알림</string>
+    <string name="sound_label">벨소리 알림</string>
+
+    <string name="turn_on">On</string>
+    <string name="turn_off">Off</string>
+
+    <string name="noti_title">알람</string>
+
+    <string name="content_authority">com.example.android.alarmapp</string>
+
+</resources>
