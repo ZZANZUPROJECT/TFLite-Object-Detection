@@ -39,33 +39,40 @@ public class DetailAlarmActivity extends AppCompatActivity {
 
     private static final String TAG ="DetailAlarmActivity";
     private Realm mRealm;
+//
+//    TextView mAmPmTextView;
+//    TextView mTimeTextView;
+//    TextView mLocationTextView;
+//    TextView mMemoTextView;
+//    Button mAlarmStopButton;
 
-    TextView mAmPmTextView;
-    TextView mTimeTextView;
-
-    TextView mLocationTextView;
-
-    TextView mMemoTextView;
-
-
-    Button mAlarmStopButton;
+    Button mTestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_alarm);
+//        setContentView(R.layout.activity_detail_alarm);
+        setContentView(R.layout.test_layout);
         mRealm=Realm.getDefaultInstance();
+//
+//        long id=-1;
+//        if(getIntent().hasExtra(Alarm.ID)){
+//            id=getIntent().getLongExtra(Alarm.ID,-1);
+//        }
 
-        long id=-1;
-        if(getIntent().hasExtra(Alarm.ID)){
-            id=getIntent().getLongExtra(Alarm.ID,-1);
-        }
+//        Alarm alarm = mRealm.where(Alarm.class)
+//                .equalTo(Alarm.ID,id)
+//                .findFirst();
 
-        Alarm alarm = mRealm.where(Alarm.class)
-                .equalTo(Alarm.ID,id)
-                .findFirst();
-
-        initView(alarm);
+//        initView(alarm);
+        mTestButton = (Button) findViewById(R.id.btn_test_cancel_alarm);
+        mTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlarmActionUtils.stopVibrate();
+                AlarmActionUtils.stopMusic();
+            }
+        });
 
 
 
@@ -79,46 +86,46 @@ public class DetailAlarmActivity extends AppCompatActivity {
         mRealm.close();
     }
 
-    private void initView(Alarm alarm){
-
-        mAmPmTextView = (TextView) findViewById(R.id.tv_am_pm);
-        mTimeTextView = (TextView) findViewById(R.id.tv_time);
-
-        mMemoTextView = (TextView) findViewById(R.id.tv_memo);
-
-        mLocationTextView = (TextView) findViewById(R.id.tv_location);
-
-        mAlarmStopButton = (Button) findViewById(R.id.btn_alarm_stop);
-
-
-        /* Location Fetch by lat, lon */
-        Alarm alarmNotRealm = mRealm.copyFromRealm(alarm);
-        new LocationFetchTask().execute(alarmNotRealm);
-
-        /* AM or PM*/
-        final String ampm = AlarmTimeUtils.getAMPM(alarm.getHour());
-        mAmPmTextView.setText(ampm);
-
-        /* Time */
-        Calendar c = Calendar.getInstance();
-        c.set(c.YEAR,c.MONTH,c.DATE,alarm.getHour(),alarm.getMinute());
-        SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.format_time), Locale.getDefault());
-        String time = formatter.format(c.getTime());
-        mTimeTextView.setText(time);
-
-        /* Memo */
-        mMemoTextView.setText(alarm.getMemo());
-
-
-        /* Alarm Stop */
-        mAlarmStopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlarmActionUtils.stopVibrate();
-                AlarmActionUtils.stopMusic();
-            }
-        });
-    }
+//    private void initView(Alarm alarm){
+//
+//        mAmPmTextView = (TextView) findViewById(R.id.tv_am_pm);
+//        mTimeTextView = (TextView) findViewById(R.id.tv_time);
+//
+//        mMemoTextView = (TextView) findViewById(R.id.tv_memo);
+//
+//        mLocationTextView = (TextView) findViewById(R.id.tv_location);
+//
+//        mAlarmStopButton = (Button) findViewById(R.id.btn_alarm_stop);
+//
+//
+//        /* Location Fetch by lat, lon */
+//        Alarm alarmNotRealm = mRealm.copyFromRealm(alarm);
+//        new LocationFetchTask().execute(alarmNotRealm);
+//
+//        /* AM or PM*/
+//        final String ampm = AlarmTimeUtils.getAMPM(alarm.getHour());
+//        mAmPmTextView.setText(ampm);
+//
+//        /* Time */
+//        Calendar c = Calendar.getInstance();
+//        c.set(c.YEAR,c.MONTH,c.DATE,alarm.getHour(),alarm.getMinute());
+//        SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.format_time), Locale.getDefault());
+//        String time = formatter.format(c.getTime());
+//        mTimeTextView.setText(time);
+//
+//        /* Memo */
+//        mMemoTextView.setText(alarm.getMemo());
+//
+//
+//        /* Alarm Stop */
+//        mAlarmStopButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlarmActionUtils.stopVibrate();
+//                AlarmActionUtils.stopMusic();
+//            }
+//        });
+//    }
 
     class LocationFetchTask extends AsyncTask<Alarm, Void, String>{
 
@@ -139,7 +146,7 @@ public class DetailAlarmActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            mLocationTextView.setText(s);
+//            mLocationTextView.setText(s);
         }
     }
 
