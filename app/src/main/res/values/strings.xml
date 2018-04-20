@@ -27,4 +27,7 @@
 
     <string name="content_authority">com.example.android.alarmapp</string>
 
+    <string name="toggling_camera">카메라 전환</string>
+    <string name="detect_object">사물 인식</string>
+
 </resources>
