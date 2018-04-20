@@ -1,29 +1,30 @@
 package com.example.android.alarmapp;
 
-import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.android.alarmapp.alarm.DeviceWakeUp;
 import com.example.android.alarmapp.data.Alarm;
+import com.example.android.alarmapp.tflite.Classifier;
+import com.example.android.alarmapp.tflite.TensorFlowImageClassifier;
 import com.example.android.alarmapp.utils.AlarmActionUtils;
-import com.example.android.alarmapp.utils.AlarmTimeUtils;
 import com.example.android.alarmapp.utils.LocationUtils;
+import com.wonderkiln.camerakit.CameraKitError;
+import com.wonderkiln.camerakit.CameraKitEvent;
+import com.wonderkiln.camerakit.CameraKitEventListener;
+import com.wonderkiln.camerakit.CameraKitImage;
+import com.wonderkiln.camerakit.CameraKitVideo;
+import com.wonderkiln.camerakit.CameraView;
 
-import org.w3c.dom.Text;
-
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import io.realm.Realm;
 
@@ -39,33 +40,34 @@ public class DetailAlarmActivity extends AppCompatActivity {
 
     private static final String TAG ="DetailAlarmActivity";
     private Realm mRealm;
-//
-//    TextView mAmPmTextView;
-//    TextView mTimeTextView;
-//    TextView mLocationTextView;
-//    TextView mMemoTextView;
-//    Button mAlarmStopButton;
+
+    private static final String MODEL_PATH = "mobilenet_quant_v1_224.tflite";
+    private static final String LABEL_PATH = "labels.txt";
+    private static final int INPUT_SIZE = 224;
+
+    private Classifier classifier;
+
+    private Executor executor = Executors.newSingleThreadExecutor();
+    private TextView textViewResult;
+    private Button btnDetectObject, btnToggleCamera;
+    private CameraView cameraView;
 
     Button mTestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_detail_alarm);
         setContentView(R.layout.test_layout);
         mRealm=Realm.getDefaultInstance();
-//
-//        long id=-1;
-//        if(getIntent().hasExtra(Alarm.ID)){
-//            id=getIntent().getLongExtra(Alarm.ID,-1);
-//        }
 
-//        Alarm alarm = mRealm.where(Alarm.class)
-//                .equalTo(Alarm.ID,id)
-//                .findFirst();
+        cameraView = findViewById(R.id.cameraView);
+        textViewResult = findViewById(R.id.textViewResult);
+        textViewResult.setMovementMethod(new ScrollingMovementMethod());
 
-//        initView(alarm);
-        mTestButton = (Button) findViewById(R.id.btn_test_cancel_alarm);
+        btnToggleCamera = findViewById(R.id.btnToggleCamera);
+        btnDetectObject = findViewById(R.id.btnDetectObject);
+
+        mTestButton = findViewById(R.id.btn_test_cancel);
         mTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +76,53 @@ public class DetailAlarmActivity extends AppCompatActivity {
             }
         });
 
+        cameraView.addCameraKitListener(new CameraKitEventListener() {
+            @Override
+            public void onEvent(CameraKitEvent cameraKitEvent) {
 
+            }
+
+            @Override
+            public void onError(CameraKitError cameraKitError) {
+
+            }
+
+            @Override
+            public void onImage(CameraKitImage cameraKitImage) {
+
+                Bitmap bitmap = cameraKitImage.getBitmap();
+
+                bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
+
+//                imageViewResult.setImageBitmap(bitmap);
+
+                final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
+
+                textViewResult.setText(results.toString());
+
+            }
+
+            @Override
+            public void onVideo(CameraKitVideo cameraKitVideo) {
+
+            }
+        });
+
+        btnToggleCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraView.toggleFacing();
+            }
+        });
+
+        btnDetectObject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cameraView.captureImage();
+            }
+        });
+
+        initTensorFlowAndLoadModel();
 
     }
 
@@ -84,48 +132,54 @@ public class DetailAlarmActivity extends AppCompatActivity {
         AlarmActionUtils.stopVibrate();
         AlarmActionUtils.stopMusic();
         mRealm.close();
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                classifier.close();
+            }
+        });
     }
 
-//    private void initView(Alarm alarm){
-//
-//        mAmPmTextView = (TextView) findViewById(R.id.tv_am_pm);
-//        mTimeTextView = (TextView) findViewById(R.id.tv_time);
-//
-//        mMemoTextView = (TextView) findViewById(R.id.tv_memo);
-//
-//        mLocationTextView = (TextView) findViewById(R.id.tv_location);
-//
-//        mAlarmStopButton = (Button) findViewById(R.id.btn_alarm_stop);
-//
-//
-//        /* Location Fetch by lat, lon */
-//        Alarm alarmNotRealm = mRealm.copyFromRealm(alarm);
-//        new LocationFetchTask().execute(alarmNotRealm);
-//
-//        /* AM or PM*/
-//        final String ampm = AlarmTimeUtils.getAMPM(alarm.getHour());
-//        mAmPmTextView.setText(ampm);
-//
-//        /* Time */
-//        Calendar c = Calendar.getInstance();
-//        c.set(c.YEAR,c.MONTH,c.DATE,alarm.getHour(),alarm.getMinute());
-//        SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.format_time), Locale.getDefault());
-//        String time = formatter.format(c.getTime());
-//        mTimeTextView.setText(time);
-//
-//        /* Memo */
-//        mMemoTextView.setText(alarm.getMemo());
-//
-//
-//        /* Alarm Stop */
-//        mAlarmStopButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                AlarmActionUtils.stopVibrate();
-//                AlarmActionUtils.stopMusic();
-//            }
-//        });
-//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cameraView.start();
+    }
+
+    @Override
+    protected void onPause() {
+        cameraView.stop();
+        super.onPause();
+    }
+
+    private void initTensorFlowAndLoadModel() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    classifier = TensorFlowImageClassifier.create(
+                            getAssets(),
+                            MODEL_PATH,
+                            LABEL_PATH,
+                            INPUT_SIZE);
+                    makeButtonVisible();
+                } catch (final Exception e) {
+                    throw new RuntimeException("Error initializing TensorFlow!", e);
+                }
+            }
+        });
+    }
+
+    private void makeButtonVisible() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                btnDetectObject.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     class LocationFetchTask extends AsyncTask<Alarm, Void, String>{
 
