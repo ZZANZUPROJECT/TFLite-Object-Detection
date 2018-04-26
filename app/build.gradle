@@ -39,7 +39,7 @@ dependencies {
     compile 'com.wonderkiln:camerakit:0.13.1'
 
     /*tf lite function*/
-    compile 'org.tensorflow:tensorflow-lite:+'
+    compile 'org.tensorflow:tensorflow-lite:+@aar'
 
     /* network lib */
     compile 'com.squareup.okhttp3:okhttp:3.5.0'
