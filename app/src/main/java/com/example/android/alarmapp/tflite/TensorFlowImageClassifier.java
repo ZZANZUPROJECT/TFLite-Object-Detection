@@ -1,9 +1,13 @@
 package com.example.android.alarmapp.tflite;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
+import android.os.SystemClock;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.tensorflow.lite.Interpreter;
 
@@ -19,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
+
+import static android.content.ContentValues.TAG;
 
 public class TensorFlowImageClassifier implements Classifier {
 
@@ -52,7 +58,15 @@ public class TensorFlowImageClassifier implements Classifier {
     public List<Recognition> recognizeImage(Bitmap bitmap) {
         ByteBuffer byteBuffer = convertBitmapToByteBuffer(bitmap);
         byte[][] result = new byte[1][labelList.size()];
+
+        long startTime = SystemClock.uptimeMillis();
+
         interpreter.run(byteBuffer, result);
+
+        long endTime = SystemClock.uptimeMillis();
+        String runTime = String.valueOf(endTime - startTime);
+
+        Log.d(TAG, "recognizeImage: " + runTime + "ms");
         return getSortedResult(result);
     }
 
@@ -83,7 +97,7 @@ public class TensorFlowImageClassifier implements Classifier {
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
-        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(BATCH_SIZE * inputSize * inputSize * PIXEL_SIZE);
+        ByteBuffer byteBuffer = ByteBuffer.allocateDirect(4 * BATCH_SIZE * inputSize * inputSize * PIXEL_SIZE);
         byteBuffer.order(ByteOrder.nativeOrder());
         int[] intValues = new int[inputSize * inputSize];
         bitmap.getPixels(intValues, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
