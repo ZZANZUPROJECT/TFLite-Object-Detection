@@ -130,7 +130,10 @@ public class TensorFlowImageClassifier implements Classifier {
                         });
 
         for (int i = 0; i < labelList.size(); ++i) {
-            float confidence = (labelProbArray[0][i]) / 255.0f; //  & 0xff 삭제해봄
+            // confidence : 확신, detection percentage
+            float confidence = (labelProbArray[0][i] * 100) / 127.0f; //  & 0xff 삭제해봄, 임시방편으로 100 곱하니까 퍼센트값 잘 나옴ㅠㅠ
+
+            // 0.1(10%) 이상이면 통과, 출력 준비
             if (confidence > THRESHOLD) {
                 pq.add(new Recognition("" + i,
                         labelList.size() > i ? labelList.get(i) : "unknown",
