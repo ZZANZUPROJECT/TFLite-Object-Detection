@@ -41,8 +41,11 @@ public class DetailAlarmActivity extends AppCompatActivity {
     private static final String TAG ="DetailAlarmActivity";
     private Realm mRealm;
 
-    private static final String MODEL_PATH = "mobilenet_quant_v1_224.tflite";
-    private static final String LABEL_PATH = "labels.txt";
+//    private static final String MODEL_PATH = "mobilenet_quant_v1_224.tflite";
+//    private static final String LABEL_PATH = "labels.txt";
+
+    private static final String MODEL_PATH = "optimized_graph.lite";
+    private static final String LABEL_PATH = "retrained_labels.txt";
     private static final int INPUT_SIZE = 224;
 
     private Classifier classifier;
