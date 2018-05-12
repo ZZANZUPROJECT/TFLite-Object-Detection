@@ -33,6 +33,9 @@ public class TensorFlowImageClassifier implements Classifier {
     private static final int PIXEL_SIZE = 3;
     private static final float THRESHOLD = 0.1f;
 
+    private static final int IMAGE_MEAN = 128;
+    private static final float IMAGE_STD = 128.0f;
+
     private Interpreter interpreter;
     private int inputSize;
     private List<String> labelList;
@@ -57,7 +60,7 @@ public class TensorFlowImageClassifier implements Classifier {
     @Override
     public List<Recognition> recognizeImage(Bitmap bitmap) {
         ByteBuffer byteBuffer = convertBitmapToByteBuffer(bitmap);
-        byte[][] result = new byte[1][labelList.size()];
+        float[][] result = new float[1][labelList.size()];
 
         long startTime = SystemClock.uptimeMillis();
 
@@ -105,16 +108,16 @@ public class TensorFlowImageClassifier implements Classifier {
         for (int i = 0; i < inputSize; ++i) {
             for (int j = 0; j < inputSize; ++j) {
                 final int val = intValues[pixel++];
-                byteBuffer.put((byte) ((val >> 16) & 0xFF));
-                byteBuffer.put((byte) ((val >> 8) & 0xFF));
-                byteBuffer.put((byte) (val & 0xFF));
+                byteBuffer.putFloat((((val >> 16) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
+                byteBuffer.putFloat((((val >> 8) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
+                byteBuffer.putFloat((((val) & 0xFF)-IMAGE_MEAN)/IMAGE_STD);
             }
         }
         return byteBuffer;
     }
 
     @SuppressLint("DefaultLocale")
-    private List<Recognition> getSortedResult(byte[][] labelProbArray) {
+    private List<Recognition> getSortedResult(float[][] labelProbArray) {
 
         PriorityQueue<Recognition> pq =
                 new PriorityQueue<>(
@@ -127,7 +130,7 @@ public class TensorFlowImageClassifier implements Classifier {
                         });
 
         for (int i = 0; i < labelList.size(); ++i) {
-            float confidence = (labelProbArray[0][i] & 0xff) / 255.0f;
+            float confidence = (labelProbArray[0][i]) / 255.0f; //  & 0xff 삭제해봄
             if (confidence > THRESHOLD) {
                 pq.add(new Recognition("" + i,
                         labelList.size() > i ? labelList.get(i) : "unknown",
