@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_gravity="center|top"
-        android:layout_marginTop="330dp"
+        android:layout_marginTop="30dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -36,8 +36,10 @@
             android:gravity="center"
             android:maxLines="15"
             android:scrollbars="vertical"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            />
 
     </LinearLayout>
 
@@ -77,15 +79,12 @@
             android:id="@+id/btn_test_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="stop alarm"
+            android:text="      "
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:background="#00ff0000"
             />
 
-
-
     </RelativeLayout>
-
-
 
 </FrameLayout>

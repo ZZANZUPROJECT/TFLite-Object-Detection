@@ -58,7 +58,7 @@ public interface Classifier {
                 resultString += String.format("(%.1f%%)\n", confidence * 100.0f);
             }
 
-            resultString += "\n";
+//            resultString += "\n";
 
             return resultString.trim();
         }

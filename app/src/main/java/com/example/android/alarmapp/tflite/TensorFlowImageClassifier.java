@@ -146,6 +146,7 @@ public class TensorFlowImageClassifier implements Classifier {
         for (int i = 0; i < recognitionsSize; ++i) {
             recognitions.add(pq.poll());
         }
+//        recognitions.add(pq.poll()); // 제일 높은 순위 하나만 return
 
         return recognitions;
     }

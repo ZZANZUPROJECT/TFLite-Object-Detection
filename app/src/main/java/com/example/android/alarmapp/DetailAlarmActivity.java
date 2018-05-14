@@ -5,12 +5,15 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.android.alarmapp.data.Alarm;
 import com.example.android.alarmapp.tflite.Classifier;
 import com.example.android.alarmapp.tflite.TensorFlowImageClassifier;
@@ -77,6 +80,8 @@ public class DetailAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlarmActionUtils.stopVibrate();
                 AlarmActionUtils.stopMusic();
+//                System.exit(0);
+                finish();
             }
         });
 
@@ -102,7 +107,13 @@ public class DetailAlarmActivity extends AppCompatActivity {
 
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
 
-                textViewResult.setText(results.toString());
+//                textViewResult.setText(results.toString());
+                textViewResult.setText(TextUtils.join(" or ", results));
+                
+                YoYo.with(Techniques.FadeIn)
+                        .duration(500)
+                        .repeat(1)
+                        .playOn(textViewResult);
 
             }
 
