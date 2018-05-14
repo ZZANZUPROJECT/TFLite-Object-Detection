@@ -20,10 +20,8 @@
             android:id="@+id/tp_time_picker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
             android:layout_gravity="center"
-            >
-        </TimePicker>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,38 +88,45 @@
                 />
         </LinearLayout>
 
-        <Switch
-            android:id="@+id/swc_repeat"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/repeat_label"
-            android:textOn="@string/turn_on"
-            android:textOff="@string/turn_off"
-            />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            >
 
-        <Switch
-            android:id="@+id/swc_vibrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/vibrate_label"
-            android:textOn="@string/turn_on"
-            android:textOff="@string/turn_off"
-            />
+            <Switch
+                android:id="@+id/swc_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/repeat_label"
+                android:textOn="@string/turn_on"
+                android:textOff="@string/turn_off"
+                />
 
-        <Switch
-            android:id="@+id/swc_sound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/sound_label"
-            android:textOn="@string/turn_on"
-            android:textOff="@string/turn_off"
-            />
+            <Switch
+                android:id="@+id/swc_vibrate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/vibrate_label"
+                android:textOn="@string/turn_on"
+                android:textOff="@string/turn_off"
+                />
+
+            <Switch
+                android:id="@+id/swc_sound"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="@string/sound_label"
+                android:textOn="@string/turn_on"
+                android:textOff="@string/turn_off"
+                />
+
+        </LinearLayout>
 
 
         <EditText
@@ -136,5 +141,21 @@
             android:hint="메모"
             />
 
+        <Button
+            android:id="@+id/btn_save_alarm"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="4dp"
+            android:text="저  장"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rounded_corner_btn"
+            />
+
     </LinearLayout>
+
+
 </ScrollView>

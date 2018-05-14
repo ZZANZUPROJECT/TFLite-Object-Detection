@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -47,6 +49,8 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
     private Switch mRepeatSwitch;
 
     private EditText mMemoEditText;
+
+    private Button mSaveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +118,7 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         mSoundSwitch = (Switch) findViewById(R.id.swc_sound);
         mRepeatSwitch = (Switch) findViewById(R.id.swc_repeat);
         mMemoEditText = (EditText) findViewById(R.id.et_memo);
+        mSaveButton = (Button) findViewById(R.id.btn_save_alarm);
     }
 
     private void setListener(){
@@ -124,6 +129,15 @@ public class AddAlarmActivity extends AppCompatActivity implements CompoundButto
         mThrToggleButton.setOnCheckedChangeListener(this);
         mFriToggleButton.setOnCheckedChangeListener(this);
         mSatToggleButton.setOnCheckedChangeListener(this);
+
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addAlarmInDB();
+//                NavUtils.navigateUpFromSameTask(this); 현재 activity는 종료되면서 stack의 상단이 호출
+                finish(); // 이걸로 되돌아가긴 하는데, navigateUpFromSameTask와 차이점이 있다면?
+            }
+        });
     }
 
     @Override
