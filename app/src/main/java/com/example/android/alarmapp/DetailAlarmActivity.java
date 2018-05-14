@@ -2,6 +2,7 @@ package com.example.android.alarmapp;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -52,7 +53,7 @@ public class DetailAlarmActivity extends AppCompatActivity {
 
     private Executor executor = Executors.newSingleThreadExecutor();
     private TextView textViewResult;
-    private Button btnDetectObject, btnToggleCamera;
+    private FloatingActionButton btnDetectObject, btnToggleCamera;
     private CameraView cameraView;
 
     Button mTestButton;
