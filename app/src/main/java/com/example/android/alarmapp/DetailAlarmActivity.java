@@ -3,6 +3,7 @@ package com.example.android.alarmapp;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -29,14 +30,15 @@ import java.util.concurrent.Executors;
 
 import io.realm.Realm;
 
-
 /*
 *
 *  알람시 표시되는 화면
 *
 *  시간 + 메모 + 위치정보 + 알람 중지 버튼
 *
-* */
+*
+*/
+
 public class DetailAlarmActivity extends AppCompatActivity {
 
     private static final String TAG ="DetailAlarmActivity";
@@ -63,6 +65,8 @@ public class DetailAlarmActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.test_layout);
         mRealm=Realm.getDefaultInstance();
+
+        showMissionDialog();
 
         cameraView = findViewById(R.id.cameraView);
         textViewResult = findViewById(R.id.textViewResult);
@@ -176,6 +180,12 @@ public class DetailAlarmActivity extends AppCompatActivity {
         });
     }
 
+    private void showMissionDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        MissionFragment mMissionFragment = new MissionFragment();
+        mMissionFragment.show(fm, "mission dialog");
+    }
+
     private void makeButtonVisible() {
         runOnUiThread(new Runnable() {
             @Override
@@ -184,28 +194,4 @@ public class DetailAlarmActivity extends AppCompatActivity {
             }
         });
     }
-
-    class LocationFetchTask extends AsyncTask<Alarm, Void, String>{
-
-        @Override
-        protected String doInBackground(Alarm... params) {
-            Alarm alarm = params[0];
-            double lat=alarm.getLat();
-            double lon=alarm.getLon();
-            while (lat==0.0&&lon==0.0){
-                lat=LocationUtils.getInstance(getApplicationContext()).getLat();
-                lon=LocationUtils.getInstance(getApplicationContext()).getLon();
-                Log.d(TAG, "lat : "+lat+", lon : "+lon);
-            }
-            return LocationUtils.getAddressFromCoordinate(
-                    DetailAlarmActivity.this, lat, lon);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-//            mLocationTextView.setText(s);
-        }
-    }
-
 }

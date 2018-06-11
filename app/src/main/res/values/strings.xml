@@ -30,4 +30,6 @@
     <string name="toggling_camera">카메라 전환</string>
     <string name="detect_object">사물 인식</string>
 
+    <string name="mission_string">라이언 을(를) 찾아보세요!</string>
+
 </resources>
