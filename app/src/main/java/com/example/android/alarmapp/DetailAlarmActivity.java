@@ -97,17 +97,19 @@ public class DetailAlarmActivity extends AppCompatActivity {
 
             @Override
             public void onImage(CameraKitImage cameraKitImage) {
-
                 Bitmap bitmap = cameraKitImage.getBitmap();
-
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
-
-//                imageViewResult.setImageBitmap(bitmap);
-
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
 
                 textViewResult.setText(results.toString());
 
+                String topResult = results.get(0).getTitle(); // highest precision result(label)
+
+                if(topResult.equals("kakaoryan")) { // todo : random label
+                    Log.d(TAG, "onImage: alarm stop!");
+                    AlarmActionUtils.stopVibrate();
+                    AlarmActionUtils.stopMusic();
+                }
             }
 
             @Override
