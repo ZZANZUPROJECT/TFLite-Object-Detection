@@ -1,6 +1,8 @@
 package com.example.android.alarmapp;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -65,6 +67,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 if(topPrecision > 0.5) {
                     ResultDialog dialog = new ResultDialog(cameraView.getContext(), topResult);
+                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                 }
             }
