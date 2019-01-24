@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,12 +38,9 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test_layout);
+        setContentView(R.layout.camera_layout);
 
         cameraView = findViewById(R.id.cameraView);
-        textViewResult = findViewById(R.id.textViewResult);
-        textViewResult.setMovementMethod(new ScrollingMovementMethod());
-
         btnDetectObject = findViewById(R.id.btnDetectObject);
 
         cameraView.addCameraKitListener(new CameraKitEventListener() {
@@ -65,12 +60,12 @@ public class CameraActivity extends AppCompatActivity {
                 bitmap = Bitmap.createScaledBitmap(bitmap, INPUT_SIZE, INPUT_SIZE, false);
                 final List<Classifier.Recognition> results = classifier.recognizeImage(bitmap);
 
-                textViewResult.setText(results.toString());
-
                 String topResult = results.get(0).getTitle(); // highest precision result(label)
+                Float topPrecision = results.get(0).getConfidence();
 
-                if(topResult.equals("kakaoryan")) { // todo : random label
-                    Log.d(TAG, "onImage: alarm stop!");
+                if(topPrecision > 0.5) {
+                    ResultDialog dialog = new ResultDialog(cameraView.getContext(), topResult);
+                    dialog.show();
                 }
             }
 

@@ -3,5 +3,5 @@ coke can
 fanta grape
 fanta oragne
 monster energy drink
-pepsi can
-sprite can
+Pepsi
+Sprite
