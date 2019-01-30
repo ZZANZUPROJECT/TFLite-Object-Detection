@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -36,11 +38,16 @@ public class CameraActivity extends AppCompatActivity {
     private TextView textViewResult;
     private FloatingActionButton btnDetectObject, btnToggleCamera;
     private CameraView cameraView;
+    private ResultDialog dialog;
+
+    private static TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.camera_layout);
+
+        initTTS();
 
         cameraView = findViewById(R.id.cameraView);
         btnDetectObject = findViewById(R.id.btnDetectObject);
@@ -66,7 +73,7 @@ public class CameraActivity extends AppCompatActivity {
                 Float topPrecision = results.get(0).getConfidence();
 
                 if(topPrecision > 0.5) {
-                    ResultDialog dialog = new ResultDialog(cameraView.getContext(), topResult);
+                    dialog = new ResultDialog(cameraView.getContext(), topResult, tts);
                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     dialog.show();
                 }
@@ -93,6 +100,11 @@ public class CameraActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        if(dialog != null) {
+            dialog.dismiss();
+            dialog = null;
+        }
+
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -106,6 +118,7 @@ public class CameraActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         cameraView.start();
+//        stopTTS();
     }
 
     @Override
@@ -139,5 +152,25 @@ public class CameraActivity extends AppCompatActivity {
                 btnDetectObject.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private void initTTS() {
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    tts.setLanguage(Locale.KOREAN);
+                } else {
+                    tts.setLanguage(Locale.KOREAN);
+                }
+            }
+        });
+    }
+
+    private void stopTTS() {
+        if(tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
     }
 }
